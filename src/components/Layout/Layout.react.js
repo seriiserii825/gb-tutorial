@@ -1,8 +1,7 @@
 import React from "react";
-
 import "./Layout.scss";
-import Navigation from "../Navigation/Navigation.react";
-import Footer from "../Footer/Footer.react";
+import Navigation from "./../Navigation/Navigation.react";
+import Footer from "./../Footer/Footer.react";
 
 const Layout = ({ children }) => {
   return (

@@ -1,10 +1,10 @@
 import React from "react";
 import Layout from "../components/Layout/Layout.react";
 
-export default function blogs() {
+export default function examples() {
   return (
     <Layout>
-      <h2>Blog</h2>
+      <h1>Layout</h1>
     </Layout>
   );
 }
