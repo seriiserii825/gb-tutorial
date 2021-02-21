@@ -1,12 +1,10 @@
 import React from "react";
 import Layout from "./components/Layout/Layout.react";
 
-export default function Home() {
+export default function about() {
   return (
     <Layout>
-      <div className="page-home">
-        <h1>Home</h1>
-      </div>
+      <h1>About</h1>
     </Layout>
   );
 }
