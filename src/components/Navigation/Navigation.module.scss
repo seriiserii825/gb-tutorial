@@ -1,0 +1,11 @@
+.wrapper {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+}
+.list {
+  display: flex;
+  justify-content: center;
+  li {
+    margin-right: 3rem;
+  }
+}
