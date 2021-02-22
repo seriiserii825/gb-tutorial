@@ -1,37 +1,39 @@
 import React from "react";
 import Img from "gatsby-image";
-import { graphql, useStaticQuery } from "gatsby";
+import {graphql, useStaticQuery} from "gatsby";
+import img from "../../images/rewind-fixed.jpg";
+
 const getImages = graphql`
-  {
-    fixed: file(relativePath: { eq: "fire.jpeg" }) {
-      childImageSharp {
-        fixed(width: 1000) {
-          ...GatsbyImageSharpFixed
+    {
+        fixed: file(relativePath: { eq: "rewind-fixed.jpg" }) {
+            childImageSharp {
+                fixed(width: 1600) {
+                    ...GatsbyImageSharpFixed
+                }
+            }
         }
-      }
-    }
-    fluid: file(relativePath: { eq: "fire.jpeg" }) {
-      childImageSharp {
-        fluid(maxWidth: 1000) {
-          ...GatsbyImageSharpFluid
+        fluid: file(relativePath: { eq: "rewind-fluid.jpg" }) {
+            childImageSharp {
+                fluid(maxWidth: 3000) {
+                    ...GatsbyImageSharpFluid
+                }
+            }
         }
-      }
     }
-  }
 `;
-export default function Images() {
+export default function Images () {
   const {
     fixed: {
-      childImageSharp: { fixed },
+      childImageSharp: {fixed},
     },
     fluid: {
-      childImageSharp: { fluid },
+      childImageSharp: {fluid},
     },
   } = useStaticQuery(getImages);
   return (
     <div className="images">
-      <Img fluid={fluid} />
-      <Img fixed={fixed} />
+      <img src={img} alt="some"/>
+      <Img fluid={fluid}/> <Img fixed={fixed}/>
     </div>
   );
 }
