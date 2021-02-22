@@ -1,31 +1,29 @@
 import React from "react";
 import Layout from "../components/Layout/Layout.react";
 import { graphql } from "gatsby";
+import Img from "gatsby-image";
 
 export default function examples({ data }) {
   const {
-    site: {
-      info: {
-        person: { name },
-      },
+    file: {
+      childImageSharp: { fixed },
     },
   } = data;
   return (
     <Layout>
-      <h1>Layout for name: {name}</h1>
+      <Img fixed={fixed} />
     </Layout>
   );
 }
 
 export const data = graphql`
-  query MyQuery {
-    site {
-      info: siteMetadata {
-        title
-        description
-        person {
-          name
-          age
+  query {
+    file(relativePath: { eq: "fire.jpeg" }) {
+      childImageSharp {
+        # Specify the image processing specifications right in the query.
+        # Makes it trivial to update as your page's design changes.
+        fluid {
+          ...GatsbyImageSharpFluid
         }
       }
     }
