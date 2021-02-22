@@ -2,6 +2,7 @@ import React from "react";
 import "./Navigation.module.scss";
 import { Link } from "gatsby";
 import styles from "./Navigation.module.scss";
+import ExampleHeader from "../ExampleHeader/ExampleHeader.react";
 
 const Navigation = () => {
   return (
@@ -18,6 +19,9 @@ const Navigation = () => {
         </li>
         <li>
           <Link to="/products">Products</Link>
+        </li>
+        <li>
+          <Link to="/examples">Examples</Link>
         </li>
       </ul>
     </nav>
