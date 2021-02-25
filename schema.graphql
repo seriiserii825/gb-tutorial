@@ -538,6 +538,7 @@ type Query {
     allSiteBuildMetadata(filter: SiteBuildMetadataFilterInput, limit: Int, skip: Int, sort: SiteBuildMetadataSortInput): SiteBuildMetadataConnection!
     allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
     allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
+    allStrapiImmobilees(filter: StrapiImmobileesFilterInput, limit: Int, skip: Int, sort: StrapiImmobileesSortInput): StrapiImmobileesConnection!
     directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
     file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childImageSharp: ImageSharpFilterInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
     imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, gatsbyImageData: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput, resolutions: ImageSharpResolutionsFilterInput, sizes: ImageSharpSizesFilterInput): ImageSharp
@@ -545,6 +546,7 @@ type Query {
     siteBuildMetadata(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): SiteBuildMetadata
     sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, matchPath: StringQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
     sitePlugin(children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, name: StringQueryOperatorInput, nodeAPIs: StringQueryOperatorInput, packageJson: SitePluginPackageJsonFilterInput, parent: NodeFilterInput, pluginFilepath: StringQueryOperatorInput, pluginOptions: SitePluginPluginOptionsFilterInput, resolve: StringQueryOperatorInput, ssrAPIs: StringQueryOperatorInput, version: StringQueryOperatorInput): SitePlugin
+    strapiImmobilees(Gallery: StrapiImmobileesGalleryFilterListInput, Pec: StringQueryOperatorInput, Planimetry: FileFilterInput, PriceLabel: StringQueryOperatorInput, Title: StringQueryOperatorInput, address: StringQueryOperatorInput, availability: StrapiImmobileesAvailabilityFilterInput, children: NodeFilterListInput, content: StringQueryOperatorInput, contract_type: StrapiImmobileesContract_typeFilterInput, createdAt: DateQueryOperatorInput, email: StringQueryOperatorInput, hours: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, location: StrapiImmobileesLocationFilterInput, parent: NodeFilterInput, phone: StringQueryOperatorInput, price: IntQueryOperatorInput, province: StrapiImmobileesProvinceFilterInput, published_at: DateQueryOperatorInput, slug: StringQueryOperatorInput, state_energy_class: StrapiImmobileesState_energy_classFilterInput, strapiId: StringQueryOperatorInput, surface: StringQueryOperatorInput, typology: StrapiImmobileesTypologyFilterInput, updatedAt: DateQueryOperatorInput): StrapiImmobilees
 }
 
 type Site implements Node {
@@ -742,7 +744,9 @@ type SitePluginPackageJsonPeerDependencies {
 
 type SitePluginPluginOptions {
     allExtensions: Boolean
+    apiURL: String
     base64Width: Int
+    contentTypes: [String]
     defaultQuality: Int
     displayName: Boolean
     failOnError: Boolean
@@ -750,14 +754,21 @@ type SitePluginPluginOptions {
     ignore: [String]
     isTSX: Boolean
     jsxPragma: String
+    loginData: SitePluginPluginOptionsLoginData
     minify: Boolean
     name: String
     namespace: String
     path: String
     pathCheck: Boolean
     pure: Boolean
+    queryLimit: Int
     stripMetadata: Boolean
     transpileTemplateLiterals: Boolean
+}
+
+type SitePluginPluginOptionsLoginData {
+    identifier: String
+    password: String
 }
 
 type SiteSiteMetadata {
@@ -770,6 +781,341 @@ type SiteSiteMetadata {
 type SiteSiteMetadataPerson {
     age: Int
     name: String
+}
+
+type StrapiImmobilees implements Node {
+    Gallery: [StrapiImmobileesGallery]
+    Pec: String
+    Planimetry: File
+    PriceLabel: String
+    Title: String
+    address: String
+    availability: StrapiImmobileesAvailability
+    children: [Node!]!
+    content: String
+    contract_type: StrapiImmobileesContract_type
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    email: String
+    hours: String
+    id: ID!
+    internal: Internal!
+    location: StrapiImmobileesLocation
+    parent: Node
+    phone: String
+    price: Int
+    province: StrapiImmobileesProvince
+    published_at(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    slug: String
+    state_energy_class: StrapiImmobileesState_energy_class
+    strapiId: String
+    surface: String
+    typology: StrapiImmobileesTypology
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesAvailability {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    slug: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesConnection {
+    distinct(field: StrapiImmobileesFieldsEnum!): [String!]!
+    edges: [StrapiImmobileesEdge!]!
+    group(field: StrapiImmobileesFieldsEnum!, limit: Int, skip: Int): [StrapiImmobileesGroupConnection!]!
+    nodes: [StrapiImmobilees!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type StrapiImmobileesContract_type {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    published_at(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    slug: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesEdge {
+    next: StrapiImmobilees
+    node: StrapiImmobilees!
+    previous: StrapiImmobilees
+}
+
+type StrapiImmobileesGallery {
+    alternativeText: String
+    caption: String
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    ext: String
+    formats: StrapiImmobileesGalleryFormats
+    hash: String
+    height: Int
+    id: String
+    mime: String
+    name: String
+    provider: String
+    related: [String]
+    size: Float
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    url: String
+    width: Int
+}
+
+type StrapiImmobileesGalleryFormats {
+    large: StrapiImmobileesGalleryFormatsLarge
+    medium: File
+    small: File
+    thumbnail: File
+}
+
+type StrapiImmobileesGalleryFormatsLarge {
+    ext: String
+    hash: String
+    height: Int
+    mime: String
+    name: String
+    size: Float
+    url: String
+    width: Int
+}
+
+type StrapiImmobileesGroupConnection {
+    edges: [StrapiImmobileesEdge!]!
+    field: String!
+    fieldValue: String
+    nodes: [StrapiImmobilees!]!
+    pageInfo: PageInfo!
+    totalCount: Int!
+}
+
+type StrapiImmobileesLocation {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    slug: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesProvince {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    published_at(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    slug: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesState_energy_class {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    published_at(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    slug: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+}
+
+type StrapiImmobileesTypology {
+    createdAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    id: String
+    image: File
+    logo: String
+    published_at(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    slug: String
+    text: String
+    title: String
+    updatedAt(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
 }
 
 enum DirectoryFieldsEnum {
@@ -1646,7 +1992,9 @@ enum SitePageFieldsEnum {
     pluginCreator___parent___parent___id
     pluginCreator___pluginFilepath
     pluginCreator___pluginOptions___allExtensions
+    pluginCreator___pluginOptions___apiURL
     pluginCreator___pluginOptions___base64Width
+    pluginCreator___pluginOptions___contentTypes
     pluginCreator___pluginOptions___defaultQuality
     pluginCreator___pluginOptions___displayName
     pluginCreator___pluginOptions___failOnError
@@ -1654,12 +2002,15 @@ enum SitePageFieldsEnum {
     pluginCreator___pluginOptions___ignore
     pluginCreator___pluginOptions___isTSX
     pluginCreator___pluginOptions___jsxPragma
+    pluginCreator___pluginOptions___loginData___identifier
+    pluginCreator___pluginOptions___loginData___password
     pluginCreator___pluginOptions___minify
     pluginCreator___pluginOptions___name
     pluginCreator___pluginOptions___namespace
     pluginCreator___pluginOptions___path
     pluginCreator___pluginOptions___pathCheck
     pluginCreator___pluginOptions___pure
+    pluginCreator___pluginOptions___queryLimit
     pluginCreator___pluginOptions___stripMetadata
     pluginCreator___pluginOptions___transpileTemplateLiterals
     pluginCreator___resolve
@@ -1773,7 +2124,9 @@ enum SitePluginFieldsEnum {
     parent___parent___parent___id
     pluginFilepath
     pluginOptions___allExtensions
+    pluginOptions___apiURL
     pluginOptions___base64Width
+    pluginOptions___contentTypes
     pluginOptions___defaultQuality
     pluginOptions___displayName
     pluginOptions___failOnError
@@ -1781,12 +2134,15 @@ enum SitePluginFieldsEnum {
     pluginOptions___ignore
     pluginOptions___isTSX
     pluginOptions___jsxPragma
+    pluginOptions___loginData___identifier
+    pluginOptions___loginData___password
     pluginOptions___minify
     pluginOptions___name
     pluginOptions___namespace
     pluginOptions___path
     pluginOptions___pathCheck
     pluginOptions___pure
+    pluginOptions___queryLimit
     pluginOptions___stripMetadata
     pluginOptions___transpileTemplateLiterals
     resolve
@@ -1797,6 +2153,469 @@ enum SitePluginFieldsEnum {
 enum SortOrderEnum {
     ASC
     DESC
+}
+
+enum StrapiImmobileesFieldsEnum {
+    Gallery
+    Gallery___alternativeText
+    Gallery___caption
+    Gallery___createdAt
+    Gallery___ext
+    Gallery___formats___large___ext
+    Gallery___formats___large___hash
+    Gallery___formats___large___height
+    Gallery___formats___large___mime
+    Gallery___formats___large___name
+    Gallery___formats___large___size
+    Gallery___formats___large___url
+    Gallery___formats___large___width
+    Gallery___formats___medium___absolutePath
+    Gallery___formats___medium___accessTime
+    Gallery___formats___medium___atime
+    Gallery___formats___medium___atimeMs
+    Gallery___formats___medium___base
+    Gallery___formats___medium___birthTime
+    Gallery___formats___medium___birthtime
+    Gallery___formats___medium___birthtimeMs
+    Gallery___formats___medium___blksize
+    Gallery___formats___medium___blocks
+    Gallery___formats___medium___changeTime
+    Gallery___formats___medium___children
+    Gallery___formats___medium___ctime
+    Gallery___formats___medium___ctimeMs
+    Gallery___formats___medium___dev
+    Gallery___formats___medium___dir
+    Gallery___formats___medium___ext
+    Gallery___formats___medium___extension
+    Gallery___formats___medium___gid
+    Gallery___formats___medium___id
+    Gallery___formats___medium___ino
+    Gallery___formats___medium___mode
+    Gallery___formats___medium___modifiedTime
+    Gallery___formats___medium___mtime
+    Gallery___formats___medium___mtimeMs
+    Gallery___formats___medium___name
+    Gallery___formats___medium___nlink
+    Gallery___formats___medium___prettySize
+    Gallery___formats___medium___publicURL
+    Gallery___formats___medium___rdev
+    Gallery___formats___medium___relativeDirectory
+    Gallery___formats___medium___relativePath
+    Gallery___formats___medium___root
+    Gallery___formats___medium___size
+    Gallery___formats___medium___sourceInstanceName
+    Gallery___formats___medium___uid
+    Gallery___formats___small___absolutePath
+    Gallery___formats___small___accessTime
+    Gallery___formats___small___atime
+    Gallery___formats___small___atimeMs
+    Gallery___formats___small___base
+    Gallery___formats___small___birthTime
+    Gallery___formats___small___birthtime
+    Gallery___formats___small___birthtimeMs
+    Gallery___formats___small___blksize
+    Gallery___formats___small___blocks
+    Gallery___formats___small___changeTime
+    Gallery___formats___small___children
+    Gallery___formats___small___ctime
+    Gallery___formats___small___ctimeMs
+    Gallery___formats___small___dev
+    Gallery___formats___small___dir
+    Gallery___formats___small___ext
+    Gallery___formats___small___extension
+    Gallery___formats___small___gid
+    Gallery___formats___small___id
+    Gallery___formats___small___ino
+    Gallery___formats___small___mode
+    Gallery___formats___small___modifiedTime
+    Gallery___formats___small___mtime
+    Gallery___formats___small___mtimeMs
+    Gallery___formats___small___name
+    Gallery___formats___small___nlink
+    Gallery___formats___small___prettySize
+    Gallery___formats___small___publicURL
+    Gallery___formats___small___rdev
+    Gallery___formats___small___relativeDirectory
+    Gallery___formats___small___relativePath
+    Gallery___formats___small___root
+    Gallery___formats___small___size
+    Gallery___formats___small___sourceInstanceName
+    Gallery___formats___small___uid
+    Gallery___formats___thumbnail___absolutePath
+    Gallery___formats___thumbnail___accessTime
+    Gallery___formats___thumbnail___atime
+    Gallery___formats___thumbnail___atimeMs
+    Gallery___formats___thumbnail___base
+    Gallery___formats___thumbnail___birthTime
+    Gallery___formats___thumbnail___birthtime
+    Gallery___formats___thumbnail___birthtimeMs
+    Gallery___formats___thumbnail___blksize
+    Gallery___formats___thumbnail___blocks
+    Gallery___formats___thumbnail___changeTime
+    Gallery___formats___thumbnail___children
+    Gallery___formats___thumbnail___ctime
+    Gallery___formats___thumbnail___ctimeMs
+    Gallery___formats___thumbnail___dev
+    Gallery___formats___thumbnail___dir
+    Gallery___formats___thumbnail___ext
+    Gallery___formats___thumbnail___extension
+    Gallery___formats___thumbnail___gid
+    Gallery___formats___thumbnail___id
+    Gallery___formats___thumbnail___ino
+    Gallery___formats___thumbnail___mode
+    Gallery___formats___thumbnail___modifiedTime
+    Gallery___formats___thumbnail___mtime
+    Gallery___formats___thumbnail___mtimeMs
+    Gallery___formats___thumbnail___name
+    Gallery___formats___thumbnail___nlink
+    Gallery___formats___thumbnail___prettySize
+    Gallery___formats___thumbnail___publicURL
+    Gallery___formats___thumbnail___rdev
+    Gallery___formats___thumbnail___relativeDirectory
+    Gallery___formats___thumbnail___relativePath
+    Gallery___formats___thumbnail___root
+    Gallery___formats___thumbnail___size
+    Gallery___formats___thumbnail___sourceInstanceName
+    Gallery___formats___thumbnail___uid
+    Gallery___hash
+    Gallery___height
+    Gallery___id
+    Gallery___mime
+    Gallery___name
+    Gallery___provider
+    Gallery___related
+    Gallery___size
+    Gallery___updatedAt
+    Gallery___url
+    Gallery___width
+    Pec
+    Planimetry___absolutePath
+    Planimetry___accessTime
+    Planimetry___atime
+    Planimetry___atimeMs
+    Planimetry___base
+    Planimetry___birthTime
+    Planimetry___birthtime
+    Planimetry___birthtimeMs
+    Planimetry___blksize
+    Planimetry___blocks
+    Planimetry___changeTime
+    Planimetry___childImageSharp___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___children___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___children___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___aspectRatio @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___base64 @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___height @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___originalName @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___srcSet @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___srcSetWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___srcWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fixed___width @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___aspectRatio @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___base64 @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___originalImg @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___originalName @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___presentationHeight @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___presentationWidth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___sizes @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___srcSet @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___srcSetWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___srcWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___fluid___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___gatsbyImageData @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___content @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___contentDigest @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___description @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___fieldOwners @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___ignoreType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___mediaType @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___owner @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___internal___type @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___original___height @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___original___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___original___width @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___parent___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___aspectRatio @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___height @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___originalName @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resize___width @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___aspectRatio @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___base64 @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___height @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___originalName @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___srcSet @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___srcSetWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___srcWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___resolutions___width @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___aspectRatio @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___base64 @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___originalImg @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___originalName @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___presentationHeight @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___presentationWidth @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___sizes @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___src @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___srcSet @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___srcSetWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___srcWebp @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___childImageSharp___sizes___tracedSVG @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    Planimetry___children
+    Planimetry___children___children
+    Planimetry___children___children___children
+    Planimetry___children___children___id
+    Planimetry___children___id
+    Planimetry___children___internal___content
+    Planimetry___children___internal___contentDigest
+    Planimetry___children___internal___description
+    Planimetry___children___internal___fieldOwners
+    Planimetry___children___internal___ignoreType
+    Planimetry___children___internal___mediaType
+    Planimetry___children___internal___owner
+    Planimetry___children___internal___type
+    Planimetry___children___parent___children
+    Planimetry___children___parent___id
+    Planimetry___ctime
+    Planimetry___ctimeMs
+    Planimetry___dev
+    Planimetry___dir
+    Planimetry___ext
+    Planimetry___extension
+    Planimetry___gid
+    Planimetry___id
+    Planimetry___ino
+    Planimetry___internal___content
+    Planimetry___internal___contentDigest
+    Planimetry___internal___description
+    Planimetry___internal___fieldOwners
+    Planimetry___internal___ignoreType
+    Planimetry___internal___mediaType
+    Planimetry___internal___owner
+    Planimetry___internal___type
+    Planimetry___mode
+    Planimetry___modifiedTime
+    Planimetry___mtime
+    Planimetry___mtimeMs
+    Planimetry___name
+    Planimetry___nlink
+    Planimetry___parent___children
+    Planimetry___parent___children___children
+    Planimetry___parent___children___id
+    Planimetry___parent___id
+    Planimetry___parent___internal___content
+    Planimetry___parent___internal___contentDigest
+    Planimetry___parent___internal___description
+    Planimetry___parent___internal___fieldOwners
+    Planimetry___parent___internal___ignoreType
+    Planimetry___parent___internal___mediaType
+    Planimetry___parent___internal___owner
+    Planimetry___parent___internal___type
+    Planimetry___parent___parent___children
+    Planimetry___parent___parent___id
+    Planimetry___prettySize
+    Planimetry___publicURL
+    Planimetry___rdev
+    Planimetry___relativeDirectory
+    Planimetry___relativePath
+    Planimetry___root
+    Planimetry___size
+    Planimetry___sourceInstanceName
+    Planimetry___uid
+    PriceLabel
+    Title
+    address
+    availability___createdAt
+    availability___id
+    availability___slug
+    availability___title
+    availability___updatedAt
+    children
+    children___children
+    children___children___children
+    children___children___children___children
+    children___children___children___id
+    children___children___id
+    children___children___internal___content
+    children___children___internal___contentDigest
+    children___children___internal___description
+    children___children___internal___fieldOwners
+    children___children___internal___ignoreType
+    children___children___internal___mediaType
+    children___children___internal___owner
+    children___children___internal___type
+    children___children___parent___children
+    children___children___parent___id
+    children___id
+    children___internal___content
+    children___internal___contentDigest
+    children___internal___description
+    children___internal___fieldOwners
+    children___internal___ignoreType
+    children___internal___mediaType
+    children___internal___owner
+    children___internal___type
+    children___parent___children
+    children___parent___children___children
+    children___parent___children___id
+    children___parent___id
+    children___parent___internal___content
+    children___parent___internal___contentDigest
+    children___parent___internal___description
+    children___parent___internal___fieldOwners
+    children___parent___internal___ignoreType
+    children___parent___internal___mediaType
+    children___parent___internal___owner
+    children___parent___internal___type
+    children___parent___parent___children
+    children___parent___parent___id
+    content
+    contract_type___createdAt
+    contract_type___id
+    contract_type___published_at
+    contract_type___slug
+    contract_type___title
+    contract_type___updatedAt
+    createdAt
+    email
+    hours
+    id
+    internal___content
+    internal___contentDigest
+    internal___description
+    internal___fieldOwners
+    internal___ignoreType
+    internal___mediaType
+    internal___owner
+    internal___type
+    location___createdAt
+    location___id
+    location___slug
+    location___title
+    location___updatedAt
+    parent___children
+    parent___children___children
+    parent___children___children___children
+    parent___children___children___id
+    parent___children___id
+    parent___children___internal___content
+    parent___children___internal___contentDigest
+    parent___children___internal___description
+    parent___children___internal___fieldOwners
+    parent___children___internal___ignoreType
+    parent___children___internal___mediaType
+    parent___children___internal___owner
+    parent___children___internal___type
+    parent___children___parent___children
+    parent___children___parent___id
+    parent___id
+    parent___internal___content
+    parent___internal___contentDigest
+    parent___internal___description
+    parent___internal___fieldOwners
+    parent___internal___ignoreType
+    parent___internal___mediaType
+    parent___internal___owner
+    parent___internal___type
+    parent___parent___children
+    parent___parent___children___children
+    parent___parent___children___id
+    parent___parent___id
+    parent___parent___internal___content
+    parent___parent___internal___contentDigest
+    parent___parent___internal___description
+    parent___parent___internal___fieldOwners
+    parent___parent___internal___ignoreType
+    parent___parent___internal___mediaType
+    parent___parent___internal___owner
+    parent___parent___internal___type
+    parent___parent___parent___children
+    parent___parent___parent___id
+    phone
+    price
+    province___createdAt
+    province___id
+    province___published_at
+    province___slug
+    province___title
+    province___updatedAt
+    published_at
+    slug
+    state_energy_class___createdAt
+    state_energy_class___id
+    state_energy_class___published_at
+    state_energy_class___slug
+    state_energy_class___title
+    state_energy_class___updatedAt
+    strapiId
+    surface
+    typology___createdAt
+    typology___id
+    typology___image___absolutePath
+    typology___image___accessTime
+    typology___image___atime
+    typology___image___atimeMs
+    typology___image___base
+    typology___image___birthTime
+    typology___image___birthtime
+    typology___image___birthtimeMs
+    typology___image___blksize
+    typology___image___blocks
+    typology___image___changeTime
+    typology___image___childImageSharp___children @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    typology___image___childImageSharp___gatsbyImageData @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    typology___image___childImageSharp___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+    typology___image___children
+    typology___image___children___children
+    typology___image___children___id
+    typology___image___ctime
+    typology___image___ctimeMs
+    typology___image___dev
+    typology___image___dir
+    typology___image___ext
+    typology___image___extension
+    typology___image___gid
+    typology___image___id
+    typology___image___ino
+    typology___image___internal___content
+    typology___image___internal___contentDigest
+    typology___image___internal___description
+    typology___image___internal___fieldOwners
+    typology___image___internal___ignoreType
+    typology___image___internal___mediaType
+    typology___image___internal___owner
+    typology___image___internal___type
+    typology___image___mode
+    typology___image___modifiedTime
+    typology___image___mtime
+    typology___image___mtimeMs
+    typology___image___name
+    typology___image___nlink
+    typology___image___parent___children
+    typology___image___parent___id
+    typology___image___prettySize
+    typology___image___publicURL
+    typology___image___rdev
+    typology___image___relativeDirectory
+    typology___image___relativePath
+    typology___image___root
+    typology___image___size
+    typology___image___sourceInstanceName
+    typology___image___uid
+    typology___logo
+    typology___published_at
+    typology___slug
+    typology___text
+    typology___title
+    typology___updatedAt
+    updatedAt
 }
 
 input AVIFOptions {
@@ -2196,7 +3015,9 @@ input SitePluginPackageJsonPeerDependenciesFilterListInput {
 
 input SitePluginPluginOptionsFilterInput {
     allExtensions: BooleanQueryOperatorInput
+    apiURL: StringQueryOperatorInput
     base64Width: IntQueryOperatorInput
+    contentTypes: StringQueryOperatorInput
     defaultQuality: IntQueryOperatorInput
     displayName: BooleanQueryOperatorInput
     failOnError: BooleanQueryOperatorInput
@@ -2204,14 +3025,21 @@ input SitePluginPluginOptionsFilterInput {
     ignore: StringQueryOperatorInput
     isTSX: BooleanQueryOperatorInput
     jsxPragma: StringQueryOperatorInput
+    loginData: SitePluginPluginOptionsLoginDataFilterInput
     minify: BooleanQueryOperatorInput
     name: StringQueryOperatorInput
     namespace: StringQueryOperatorInput
     path: StringQueryOperatorInput
     pathCheck: BooleanQueryOperatorInput
     pure: BooleanQueryOperatorInput
+    queryLimit: IntQueryOperatorInput
     stripMetadata: BooleanQueryOperatorInput
     transpileTemplateLiterals: BooleanQueryOperatorInput
+}
+
+input SitePluginPluginOptionsLoginDataFilterInput {
+    identifier: StringQueryOperatorInput
+    password: StringQueryOperatorInput
 }
 
 input SitePluginSortInput {
@@ -2234,6 +3062,137 @@ input SiteSiteMetadataPersonFilterInput {
 input SiteSortInput {
     fields: [SiteFieldsEnum]
     order: [SortOrderEnum] = [ASC]
+}
+
+input StrapiImmobileesAvailabilityFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    slug: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesContract_typeFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    published_at: DateQueryOperatorInput
+    slug: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesFilterInput {
+    Gallery: StrapiImmobileesGalleryFilterListInput
+    Pec: StringQueryOperatorInput
+    Planimetry: FileFilterInput
+    PriceLabel: StringQueryOperatorInput
+    Title: StringQueryOperatorInput
+    address: StringQueryOperatorInput
+    availability: StrapiImmobileesAvailabilityFilterInput
+    children: NodeFilterListInput
+    content: StringQueryOperatorInput
+    contract_type: StrapiImmobileesContract_typeFilterInput
+    createdAt: DateQueryOperatorInput
+    email: StringQueryOperatorInput
+    hours: StringQueryOperatorInput
+    id: StringQueryOperatorInput
+    internal: InternalFilterInput
+    location: StrapiImmobileesLocationFilterInput
+    parent: NodeFilterInput
+    phone: StringQueryOperatorInput
+    price: IntQueryOperatorInput
+    province: StrapiImmobileesProvinceFilterInput
+    published_at: DateQueryOperatorInput
+    slug: StringQueryOperatorInput
+    state_energy_class: StrapiImmobileesState_energy_classFilterInput
+    strapiId: StringQueryOperatorInput
+    surface: StringQueryOperatorInput
+    typology: StrapiImmobileesTypologyFilterInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesGalleryFilterInput {
+    alternativeText: StringQueryOperatorInput
+    caption: StringQueryOperatorInput
+    createdAt: DateQueryOperatorInput
+    ext: StringQueryOperatorInput
+    formats: StrapiImmobileesGalleryFormatsFilterInput
+    hash: StringQueryOperatorInput
+    height: IntQueryOperatorInput
+    id: StringQueryOperatorInput
+    mime: StringQueryOperatorInput
+    name: StringQueryOperatorInput
+    provider: StringQueryOperatorInput
+    related: StringQueryOperatorInput
+    size: FloatQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+    url: StringQueryOperatorInput
+    width: IntQueryOperatorInput
+}
+
+input StrapiImmobileesGalleryFilterListInput {
+    elemMatch: StrapiImmobileesGalleryFilterInput
+}
+
+input StrapiImmobileesGalleryFormatsFilterInput {
+    large: StrapiImmobileesGalleryFormatsLargeFilterInput
+    medium: FileFilterInput
+    small: FileFilterInput
+    thumbnail: FileFilterInput
+}
+
+input StrapiImmobileesGalleryFormatsLargeFilterInput {
+    ext: StringQueryOperatorInput
+    hash: StringQueryOperatorInput
+    height: IntQueryOperatorInput
+    mime: StringQueryOperatorInput
+    name: StringQueryOperatorInput
+    size: FloatQueryOperatorInput
+    url: StringQueryOperatorInput
+    width: IntQueryOperatorInput
+}
+
+input StrapiImmobileesLocationFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    slug: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesProvinceFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    published_at: DateQueryOperatorInput
+    slug: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesSortInput {
+    fields: [StrapiImmobileesFieldsEnum]
+    order: [SortOrderEnum] = [ASC]
+}
+
+input StrapiImmobileesState_energy_classFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    published_at: DateQueryOperatorInput
+    slug: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
+}
+
+input StrapiImmobileesTypologyFilterInput {
+    createdAt: DateQueryOperatorInput
+    id: StringQueryOperatorInput
+    image: FileFilterInput
+    logo: StringQueryOperatorInput
+    published_at: DateQueryOperatorInput
+    slug: StringQueryOperatorInput
+    text: StringQueryOperatorInput
+    title: StringQueryOperatorInput
+    updatedAt: DateQueryOperatorInput
 }
 
 input StringQueryOperatorInput {
